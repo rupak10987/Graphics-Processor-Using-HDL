@@ -25,7 +25,7 @@ reg v_sync_reg, h_sync_reg;
 wire v_sync_next,h_sync_next;
 
 //status
-wire h_end, v_end, pixel_tick
+wire h_end, v_end, pixel_tick;
 
 
 //synchronous design method
@@ -37,7 +37,7 @@ always @(posedge clk,posedge reset) begin
         h_count_reg<=0;
         v_count_reg<=0;
         v_sync_reg<=0;
-        h_sync_reg<=0
+        h_sync_reg<=0;
     end
     else
     begin

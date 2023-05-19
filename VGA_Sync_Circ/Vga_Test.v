@@ -20,7 +20,7 @@ rgb_reg <= 0;
 else 
 rgb_reg <= B_color; 
 // output 
-assign rgb = (video_on) ? rgb_reg : 3'bO;
+assign RGB = (video_on) ? rgb_reg : 3'b0;
 
 
 endmodule
