@@ -13,10 +13,10 @@ module Line_Draw(
     reg [9:0] count_x, count_y;
 
 // Line coordinates
-  parameter X1 = 1;  // X coordinate of the first point
-  parameter Y1 = 2;  // Y coordinate of the first point
-  parameter X2 = 40;  // X coordinate of the second point
-  parameter Y2 = 30;  // Y coordinate of the second point
+  parameter X1 = 1;  
+  parameter Y1 = 2;  
+  parameter X2 = 40;  
+  parameter Y2 = 30;  
 
 //initialization
 initial begin
