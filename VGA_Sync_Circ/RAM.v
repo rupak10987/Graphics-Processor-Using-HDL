@@ -11,46 +11,12 @@ reg [data_width-1:0] ram [2*addr_width-1:0];
 
 always @(posedge clk) begin
     if(we)
+    begin
+        $display("==>ram_addr=%b\nram_data=%b\n",wr_addr,wr_data);
     ram[wr_addr]=wr_data;
-end
+    end
 
+end
 assign read_data=ram[read_addr];
 endmodule
-/*
-//test bench
-`timescale 1ns/10ps
-module ram_tb();
-reg clk,we;
-reg [7:0] read_addr,wr_addr;
-reg [31:0] wr_data;
-wire [31:0] read_data;
-RAM circ1(.clk(clk),
-          .we(we),
-          .read_addr(read_addr),
-          .wr_addr(wr_addr),
-          .wr_data(wr_data),
-          .read_data(read_data));
 
-always
-begin
-clk=~clk;
-#20;    
-end
-initial begin
-    clk<=0;
-    we=0;
-    #40;
-    we=1;
-    wr_addr=0;
-    wr_data=1;
-    read_addr=3;
-    #40;
-    read_addr=3;
-    #40;
-    $finish;
-end
-initial begin
-    $monitor("rd_ad=%b \n rd_data=%b \n wr_adr=%b \n wr_data=%b \n we=%b \n clk=%b \n DONE_PULSE",read_addr,read_data,wr_addr,wr_data,we,clk);
-end
-endmodule
-*/
