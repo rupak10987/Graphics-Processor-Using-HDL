@@ -29,6 +29,7 @@ initial begin
     x = X1;
     y = Y1;
     p = 2 * dy - dx;
+    $finish;
 end
 
 //counter reg
