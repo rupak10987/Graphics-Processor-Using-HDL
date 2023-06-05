@@ -16,3 +16,28 @@ endcase
 end
 assign read_data=data;
 endmodule
+
+/*
+//test bench
+`timescale 1ns/10ps
+module ram_tb();
+reg [7:0] read_addr;
+wire [31:0] read_data;
+ROM circ1(.read_data(read_data),.read_addr(read_addr));
+
+initial begin
+    read_addr=0;
+    #40;
+    read_addr=1;
+    #40;
+    read_addr=2;
+    #40;
+    read_addr=3;
+    #40;
+    $finish;
+end
+initial begin
+    $monitor("rd_ad=%b \nrd_data=%b DONE_PULSE",read_addr,read_data);
+end
+endmodule
+*/

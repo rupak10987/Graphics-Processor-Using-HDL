@@ -4,8 +4,11 @@ module rom_to_ram_load
     input wire clk,
     input wire complete,
     output wire [addr_width-1:0]addr
+
 );
-    
+wire [data_width-1:0] fetched_data;
+ROM circ1(.read_addr(addr),.read_data(fetched_data));
+RAM circ2(.clk(clk),.we(1'b0),.wr_addr(addr),.wr_data(fetched_data));
 //counter
 reg[addr_width-1:0] counter_reg,counter_reg_next;
 initial begin
@@ -28,16 +31,22 @@ assign addr=counter_reg;
 endmodule
 
 
-//tst bench
+//TEST BENCH
 module tb();
 reg clk;
 reg complete;
 wire [7:0]out_addr;
+wire [31:0]ram_out;
 
 rom_to_ram_load cic1(
     .clk(clk),
     .complete(complete),
     .addr(out_addr));
+
+RAM circ2(
+    .read_addr(out_addr),
+    .read_data(ram_out)
+);
 
 always begin
 clk=~clk;
@@ -49,11 +58,17 @@ initial begin
     complete=0;
     #400;
     complete=1;
-    #40;
+    #4000;
     $finish;
 end
 
 initial begin
     $monitor("complete = %b\n clk=%b \n out_addr=%b\n",complete,clk,out_addr);
+    $monitor("ram_read_addr = %b\n ram_data=%b\n",out_addr,ram_out);
 end
 endmodule
+
+
+
+
+//testing to check if things oke or not

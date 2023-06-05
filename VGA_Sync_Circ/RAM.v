@@ -43,9 +43,9 @@ initial begin
     we=1;
     wr_addr=0;
     wr_data=1;
-    read_addr=1;
+    read_addr=3;
     #40;
-    read_addr=0;
+    read_addr=3;
     #40;
     $finish;
 end
