@@ -1,4 +1,4 @@
 main:
-	iverilog -o out.vpp Line_Draw.v
+	iverilog -o out.vpp Brsn_Line.v
 	vvp out.vpp
 	#gtkwave test.vcd
