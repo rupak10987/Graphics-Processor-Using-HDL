@@ -6,7 +6,7 @@ module B_Line(
     output reg finish
 );
 // Line coordinates
-reg [31:0]X1,Y1,X2,Y2;
+reg signed [31:0]X1,Y1,X2,Y2;
 always @(*) begin
   X1 <= x1;  
   Y1 <= y1;  
@@ -114,51 +114,48 @@ assign X=x[9:0];
 assign Y=y[8:0];
 endmodule
 
+// ////testbench
+// `timescale 1ns/1ps
+// module brsn_line_tb ();
+// reg clk;
+// reg start;
+// wire finish;
+// wire[9:0]X;
+// wire[8:0]Y;
+// reg[31:0] x1,x2,y1,y2;
+// B_Line circ1(
+//     .clk(clk),
+//     .start(start),
+//     .X(X),
+//     .Y(Y),
+//     .finish(finish),
+//     .x1(x1),
+//     .y1(y1),
+//     .x2(x2),
+//     .y2(y2)
+// );
 
+// always
+// begin
+//     clk=~clk;
+//     #20;
+// end
+// initial
+// begin
+//     x1=10;
+//     y1=40;
+//     x2=30;
+//     y2=20;
+//     clk<=1'b0;
+//     start<=1'b1;
+//     #40;
+//     start<=1'b0;
+//     #4000;
+//     $finish;
+// end
 
-
-////testbench
-`timescale 1ns/1ps
-module brsn_line_tb ();
-reg clk;
-reg start;
-wire finish;
-wire[9:0]X;
-wire[8:0]Y;
-reg[31:0] x1,x2,y1,y2;
-B_Line circ1(
-    .clk(clk),
-    .start(start),
-    .X(X),
-    .Y(Y),
-    .finish(finish),
-    .x1(x1),
-    .y1(y1),
-    .x2(x2),
-    .y2(y2)
-);
-
-always
-begin
-    clk=~clk;
-    #20;
-end
-initial
-begin
-    x1=10;
-    y1=20;
-    x2=30;
-    y2=40;
-    clk<=1'b0;
-    start<=1'b1;
-    #40;
-    start<=1'b0;
-    #4000;
-    $finish;
-end
-
-initial
-begin
-    $monitor("x=%d, y=%d |finish=%b",X,Y,finish);
-end
-endmodule
+// initial
+// begin
+//     $monitor("x=%d, y=%d |finish=%b",X,Y,finish);
+// end
+// endmodule
