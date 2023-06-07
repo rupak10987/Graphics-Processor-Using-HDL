@@ -12,6 +12,8 @@ case (read_addr)
     8'b0000_0001:data=2;
     8'b0000_0010:data=30;
     8'b0000_0011:data=40;
+    8'b0000_0100:data=45;
+    8'b0000_0101:data=3;
     default:data=0; 
 endcase    
 end

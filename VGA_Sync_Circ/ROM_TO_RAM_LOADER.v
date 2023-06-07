@@ -2,7 +2,9 @@ module ROM2RAM
 #(parameter addr_width = 8,data_width=32) 
 (
     input wire start,clk,reset,
-    output reg finish
+    output reg finish,
+    input wire[addr_width-1:0] ram_read_addr,
+    output wire[data_width-1:0] ram_read_data
 );
 localparam [1:0] suru = 2'b00,
                  rom_theke_ram = 2'b01,
@@ -14,12 +16,12 @@ reg[addr_width-1:0] addr_counter_reg,addr_counter_next;
 //module instantiation
 //ram signals
 wire ram_we;
-wire[addr_width-1:0]ram_read_addr,ram_wr_addr;
-wire[data_width-1:0]ram_read_data,ram_write_data;
+wire[addr_width-1:0]local_ram_read_addr,ram_wr_addr;
+wire[data_width-1:0]ram_write_data;
 RAM circ1(
     .clk(clk),
     .we(ram_we),
-    .read_addr(ram_read_addr),
+    .read_addr(local_ram_read_addr),
     .wr_addr(ram_wr_addr),
     .wr_data(ram_write_data),
     .read_data(ram_read_data)
@@ -63,7 +65,7 @@ case (state_reg)
     end
     rom_theke_ram:
     begin
-        if(addr_counter_reg<=2**addr_width-1)
+        if(addr_counter_reg<6)
         begin
             addr_counter_next=addr_counter_reg+1;
         end
@@ -75,7 +77,7 @@ case (state_reg)
     sesh:
     begin
         finish=1'b1;
-        state_next=suru;
+        //state_next=suru;
     end
     vul:
     begin
@@ -83,41 +85,9 @@ case (state_reg)
     end  
 endcase
 end
-
+assign local_ram_read_addr=(state_reg==sesh)?ram_read_addr:0;
 assign ram_we=(state_reg==rom_theke_ram)?1'b1:0;
 assign ram_wr_addr=(state_reg==rom_theke_ram)?addr_counter_reg:0;
 assign ram_write_data=(state_reg==rom_theke_ram)?rom_data:0;
-assign ram_read_addr=0;
 assign rom_read_addr=(state_reg==rom_theke_ram)?addr_counter_reg:0;
-endmodule
-
-
-//tbfor rom_to_ram
-`timescale 1ns/1ps
-module tb_r2r();
-reg clk;
-reg reset;
-reg start;
-wire finish;
-
-
-ROM2RAM circ3(.clk(clk),.reset(reset),.start(start),.finish(finish));
-
-
-always begin
-    clk=~clk;
-    #10;
-end
-
-initial begin
-    clk=0;
-    reset=1;
-    start=1;
-    #40;
-    reset=0;
-    start=0;
-    #4000;
-    $finish;
-
-end
 endmodule

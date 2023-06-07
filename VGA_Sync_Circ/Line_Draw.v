@@ -20,8 +20,8 @@ module Line_Draw(
 
 //initialization
 initial begin
-    h_counter<=X1;
-    v_counter<=Y1;
+    h_counter=X1;
+    v_counter=Y1;
     dx = X2 - X1;
     dy = Y2 - Y1;
     inc1 = (dx < 0) ? -1 : 1;
@@ -29,7 +29,6 @@ initial begin
     x = X1;
     y = Y1;
     p = 2 * dy - dx;
-    $finish;
 end
 
 //counter reg
@@ -71,30 +70,30 @@ end
 
         if (p >= 0) 
         begin
-          x <= x + inc1;
-          p <= p + inc2;
+          x = x + inc1;
+          p = p + inc2;
         end
         else
         begin
-          x <= x;
-          p <= p + dx;
+          x = x;
+          p = p + dx;
         end
       end
 
       if (state == 2'b10) begin
-        count_x <= count_x + 1;
+        count_x = count_x + 1;
         if (count_x >= dx)
         begin
-          count_x <= 0;
-          count_y <= count_y + 1;
-          x <= X1;
-          y <= Y1 + count_y;
-          p <= p - dx * dy;
+          count_x = 0;
+          count_y = count_y + 1;
+          x = X1;
+          y = Y1 + count_y;
+          p = p - dx * dy;
         end
         else 
         begin
-          x <= x + 1;
-          p <= p + 2 * dy;
+          x = x + 1;
+          p = p + 2 * dy;
         end
       end  
  end

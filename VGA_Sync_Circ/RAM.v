@@ -12,7 +12,7 @@ reg [data_width-1:0] ram [2*addr_width-1:0];
 always @(posedge clk) begin
     if(we)
     begin
-        $display("==>ram_addr=%b\nram_data=%b\n",wr_addr,wr_data);
+    // $display("==>ram_addr=%b\nram_data=%b\n",wr_addr,wr_data);
     ram[wr_addr]=wr_data;
     end
 
