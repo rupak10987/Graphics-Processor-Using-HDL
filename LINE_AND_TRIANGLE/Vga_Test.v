@@ -18,7 +18,11 @@ always @(posedge clk , posedge reset )
 if (reset) 
 rgb_reg <= 0; 
 else 
-rgb_reg <= B_color; 
+if(1'b1)
+begin
+rgb_reg <= B_color;    
+end
+ 
 // output 
 assign RGB = (video_on) ? rgb_reg : 3'b0;
 

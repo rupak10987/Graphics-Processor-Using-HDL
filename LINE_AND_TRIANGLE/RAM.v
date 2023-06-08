@@ -7,7 +7,7 @@ module RAM
     output wire [data_width-1:0] read_data1,read_data2,read_data3,read_data4
 
 );
-reg [data_width-1:0] ram [2*addr_width-1:0];
+reg [data_width-1:0] ram [2**addr_width-1:0];
 
 always @(posedge clk) begin
     if(we)

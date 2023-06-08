@@ -100,5 +100,6 @@ assign h_sync=h_sync_reg;
 assign v_sync=v_sync_reg;
 assign pixel_x=h_count_reg;
 assign p_tick=pixel_tick;
+assign pixel_y=v_count_reg;
 
 endmodule
