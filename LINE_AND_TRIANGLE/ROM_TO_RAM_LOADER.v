@@ -39,7 +39,7 @@ ROM circ2(
 
 
 //memory
-always @(posedge clk, reset)
+always @(posedge clk,reset)
 begin
 if(reset)
 begin
@@ -47,8 +47,10 @@ begin
     addr_counter_reg<=0;
 end
 else
+begin
     state_reg<=state_next;
     addr_counter_reg<=addr_counter_next;
+end
 end
 
 //next

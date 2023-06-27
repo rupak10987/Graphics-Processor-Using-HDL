@@ -6,16 +6,16 @@ module video_buffer
     input wire[data_width-1:0] wr_data,
     output wire [data_width-1:0] read_data1
 );
-reg [data_width-1:0] ram [2**addr_width-1:0];
+reg [data_width-1:0] buffer [2**addr_width-1:0];
 
 always @(posedge clk) begin
     if(we)
     begin
-    ram[wr_addr]=wr_data;
+    buffer[wr_addr]=wr_data;
     end
 
 end
-assign read_data1=(ram[read_addr]==1'b1)?1:0;
+assign read_data1=(buffer[read_addr]==1'b1)?1:0;
 endmodule
 
 

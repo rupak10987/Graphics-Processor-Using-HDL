@@ -87,7 +87,7 @@ end
 
 always begin
     clk=~clk;
-    #10;
+    #1;
 end
 
 always @(*) begin
@@ -103,20 +103,20 @@ initial begin
     reset=1;
     start=1;
     vid_buff_we=1'b0;
-    #20;
+    #2;
     reset=0;
     start=0;
-    #140;//load done
+    #14;//load done
     ram_read_addr=8'b0000_0000;
-    #20;
+    #2;
     vid_buff_we=1'b1;
     line_start=1'b1;
-    #20;
+    #2;
     line_start=1'b0;
-    #400;
+    #40;
     vid_buff_we=1'b0;
     monitor_rest=0;
-    #2000000000;
+    #200000000;
     $finish;
 end
 
