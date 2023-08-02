@@ -19,7 +19,7 @@ always @(posedge clk)
 begin
 if(start)
 begin
-    finish_reg=0;
+    finish_reg=1'b0;
     state_reg=2'b00;
     state_next=2'b00;
     X1=x1;
@@ -35,17 +35,17 @@ end
 else
 begin
 state_reg=state_next;
-
 end
 end
 
 always @(posedge clk) 
 begin
-    if(~finish_reg)
+    if(finish_reg==1'b0 & ~start)
     begin
     case (state_reg)
             2'b00: 
             begin
+            $display("entering");
             temp=X1*D;
             X1=temp/Z1;
             temp=Y1*D;
@@ -60,14 +60,9 @@ begin
             X3=temp/Z3;
             temp=Y3*D;
             Y3=temp/Z3;
-            state_next=2'b01;   
+           finish_reg=1'b1;  
             end
-
-             2'b01:
-             begin
-                finish_reg=1'b1;
-             end 
-endcase            
+    endcase            
     end
 end
 assign finish=finish_reg;
@@ -96,21 +91,21 @@ begin
     #1;
 end
 initial begin
-   clk=0;
+   clk=1'b0;
    start=1'b1;
-    x1=35;
-    y1=40;
-    z1=800;
-    x2=10;
-    y2=20;
-    z2=650;
-    x3=30;
-    y3=60;
-    z3=1000;
-    #2;
-    start=1'b0;
-    #20;
-    $finish;
+   x1=35;
+   y1=40;
+   z1=800;
+   x2=10;
+   y2=20;
+   z2=650;
+   x3=30;
+   y3=60;
+   z3=1000;
+   #2;
+   start=1'b0;
+   #20;
+   $finish;
 end
 initial begin
    $monitor("x1,y1=[%d,%d]\nx2,y2=[%d,%d]\nx3,y3=[%d,%d]",ox1,oy1,ox2,oy2,ox3,oy3); 
