@@ -116,8 +116,8 @@ initial begin
     #2;
     Rreset=0;
     Rstart=0;
-    #18;//load done
-    ram_read_addr=8'b0000_0000;//a whole triangle is feed
+    #36;//load done
+    ram_read_addr=9;//a whole triangle is feed
     #2;
     vid_buff_we=1'b1;
     treset=1'b1;

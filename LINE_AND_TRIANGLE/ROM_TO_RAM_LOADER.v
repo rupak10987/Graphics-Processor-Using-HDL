@@ -75,7 +75,7 @@ case (state_reg)
     end
     rom_theke_ram:
     begin
-        if(addr_counter_reg<9)
+        if(addr_counter_reg<18)
         begin
             addr_counter_next=addr_counter_reg+1;
         end
@@ -101,3 +101,9 @@ assign ram_wr_addr=(state_reg==rom_theke_ram)?addr_counter_reg:0;
 assign ram_write_data=(state_reg==rom_theke_ram)?rom_data:0;
 assign rom_read_addr=(state_reg==rom_theke_ram)?addr_counter_reg:0;
 endmodule
+
+//testbench
+// `timescale 1ns/1ps
+// module tb ();
+    
+// endmodule
