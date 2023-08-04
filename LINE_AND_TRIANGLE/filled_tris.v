@@ -69,7 +69,7 @@ module filled_tris (
     always @(posedge clk)
     begin
         state_next=state_reg;
-        if(~finish_reg)
+        if(~finish_reg & ~reset)
         begin
           case (state_reg)
             4'b0000: //initialize all reg

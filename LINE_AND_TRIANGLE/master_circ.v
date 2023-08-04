@@ -6,6 +6,7 @@ reg Rreset;
 reg Rstart;
 wire Rfinish;
 reg [7:0]ram_read_addr;
+reg [7:0]ram_read_addr_next;
 wire [31:0]ram_read_data1,ram_read_data2,ram_read_data3,ram_read_data4,ram_read_data5,ram_read_data6,ram_read_data7,ram_read_data8,ram_read_data9;
 
 
@@ -44,14 +45,22 @@ filled_tris uut(    .x1(tx1),
                     .finish(tfinish),
                     .reset(treset)
                     );
-//for triangle
+reg signed [31:0]D=300;                    
+
 always @(*) begin
     tx1=ram_read_data1;
     ty1=ram_read_data2;
     tx2=ram_read_data4;
-    ty2=ram_read_data5; 
+    ty2=ram_read_data5;
     tx3=ram_read_data7;
-    ty3=ram_read_data8; 
+    ty3=ram_read_data8;
+    // if projectrion
+    // tx1=(ram_read_data1*D)/ram_read_data3;
+    // ty1=(ram_read_data2*D)/ram_read_data3;
+    // tx2=(ram_read_data4*D)/ram_read_data6;
+    // ty2=(ram_read_data5*D)/ram_read_data6; 
+    // tx3=(ram_read_data7*D)/ram_read_data9;
+    // ty3=(ram_read_data8*D)/ram_read_data9; 
 end
 
 reg vid_buff_we;
@@ -106,32 +115,57 @@ always begin
     #1;
 end
 
+//for iterating through triangles in a model
+reg[1:0] tiny_state;
+always @(posedge clk) begin
+    ram_read_addr<=ram_read_addr_next;
+end
+
+always @(posedge clk) begin
+    if(tfinish & ram_read_addr<9)
+    begin
+        $display("triangle done");
+        treset=1'b1;
+        tiny_state=2'b00;
+    end
+    case (tiny_state)
+        2'b00: 
+        begin
+        ram_read_addr_next=ram_read_addr+9;  
+        tiny_state=2'b01;
+        end
+        2'b01: 
+        begin
+        treset=1'b0;
+        //limbo
+        end 
+    endcase
+end
+
 
 initial begin
     monitor_rest=1;
     clk=0;
-    Rreset=1;
     Rstart=1;
     vid_buff_we=1'b0;
     #2;
-    Rreset=0;
     Rstart=0;
     #36;//load done
-    ram_read_addr=9;//a whole triangle is feed
+    ram_read_addr=0;//1st triangle is feed
+    ram_read_addr_next=0;
     #2;
     vid_buff_we=1'b1;
     treset=1'b1;
     #2;
     treset=1'b0;
-    #1000;//onek gula clk pulse dite hbe
-    vid_buff_we=1'b0;
+    #4000;//onek gula clk pulse dite hbe
+    vid_buff_we=1'b0;//draw kora sesh so ekhon screen e render kora jabe
     monitor_rest=0;
     #200000000;
     $finish;
 end
 
 initial begin
-//$monitor("xL=%d | xR=%d at y=%d" ,OX1,OX2,OY1); //for triangle
 $monitor("x=%d,y=%d",OX1,OY1);//for showing only the filled pixels
 //$monitor("stat=%b at x=%d | y=%d\n",stat,p_x,p_y);//for showing all pixels and its corresponding bw value
 end

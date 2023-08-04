@@ -3,7 +3,7 @@ module B_Line(
     input wire[31:0] x1,y1,x2,y2,
     output wire [9:0]X,
     output wire [8:0]Y,
-    output reg finish
+    output wire finish
 );
 
 // Line coordinates
@@ -14,6 +14,7 @@ always @(*) begin
   X2 <= x2;  
   Y2 <= y2;  
 end
+reg L_finish_reg;
 reg is_paused;
 reg signed[31:0]x,x_next,y,y_next,dx,dy,dt,ds,d,d_next;
 reg[2:0]state_reg,state_next;
@@ -23,7 +24,7 @@ reg[2:0]state_reg,state_next;
     begin
         state_reg<=2'b00;
         state_next<=2'b00;
-        finish=1'b0;
+        L_finish_reg=1'b0;
     end
     else
     begin
@@ -70,7 +71,7 @@ always @(*) begin
         end 
         3'b010://horizontal_line
         begin
-        if(x<=X2) 
+        if(x<X2) 
         begin
         x_next=x+1;
         if(d<0)
@@ -88,7 +89,7 @@ always @(*) begin
         end
         3'b011://vertical line
         begin
-            if(y<=Y2) 
+            if(y<Y2) 
         begin
         y_next=y+1;
         if(d<0)
@@ -106,12 +107,12 @@ always @(*) begin
         end
         3'b100:
         begin
-            finish=1'b1;
+            L_finish_reg=1'b1;
         end
         
     endcase
 end
-
+assign finish=L_finish_reg;
 assign X=x[9:0];
 assign Y=y[8:0];
 

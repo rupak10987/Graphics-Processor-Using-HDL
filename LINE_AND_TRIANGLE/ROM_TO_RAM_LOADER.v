@@ -44,14 +44,13 @@ ROM circ2(
 
 
 //memory
-always @(posedge clk,reset)
-begin
-if(reset)
-begin
-    state_reg<=suru;
-    addr_counter_reg<=0;
+initial begin
+state_reg<=suru;
+addr_counter_reg<=0;  
 end
-else
+always @(posedge clk)
+begin
+
 begin
     state_reg<=state_next;
     addr_counter_reg<=addr_counter_next;
