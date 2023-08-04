@@ -4,7 +4,7 @@ module ROM2RAM
     input wire start,clk,reset,
     output reg finish,
     input wire[addr_width-1:0] ram_read_addr,
-    output wire[data_width-1:0] ram_read_data1,ram_read_data2,ram_read_data3,ram_read_data4
+    output wire[data_width-1:0] ram_read_data1,ram_read_data2,ram_read_data3,ram_read_data4,ram_read_data5,ram_read_data6,ram_read_data7,ram_read_data8,ram_read_data9
 );
 localparam [1:0] suru = 2'b00,
                  rom_theke_ram = 2'b01,
@@ -27,7 +27,12 @@ RAM circ1(
     .read_data1(ram_read_data1),
     .read_data2(ram_read_data2),
     .read_data3(ram_read_data3),
-    .read_data4(ram_read_data4)
+    .read_data4(ram_read_data4),
+    .read_data5(ram_read_data5),
+    .read_data6(ram_read_data6),
+    .read_data7(ram_read_data7),
+    .read_data8(ram_read_data8),
+    .read_data9(ram_read_data9)
 );
 
 wire[addr_width-1:0]rom_read_addr;
@@ -70,7 +75,7 @@ case (state_reg)
     end
     rom_theke_ram:
     begin
-        if(addr_counter_reg<6)
+        if(addr_counter_reg<9)
         begin
             addr_counter_next=addr_counter_reg+1;
         end

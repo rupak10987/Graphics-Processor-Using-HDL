@@ -1,6 +1,7 @@
 module filled_tris (
     input wire signed[31:0]x1,y1,x2,y2,x3,y3,
-    output wire signed[31:0]OX,OY,
+    output wire [9:0]OX1,
+    output wire [8:0]OY1,
     output wire finish,
     input wire reset,
     input wire clk
@@ -21,6 +22,29 @@ module filled_tris (
     reg signed[31:0] X_01[640:0];
     reg signed[31:0] X_12[640:0];
     reg signed[31:0] X_02[640:0];
+    reg signed[31:0]lnX1,lnY1,lnX2,lnY2;
+
+
+    //for line
+    reg line_start;
+    wire line_finish;
+    wire[9:0]LX;
+    wire[8:0]LY;
+    reg[31:0] lx1,lx2,ly1,ly2;
+    B_Line ln(
+     .clk(clk),
+     .start(line_start),
+     .X(LX),
+     .Y(LY),
+     .finish(line_finish),
+     .x1(lx1),
+     .y1(ly1),
+     .x2(lx2),
+     .y2(ly2)
+    );
+
+
+
 
 
     always @(posedge clk) begin
@@ -39,6 +63,9 @@ module filled_tris (
         end
         
     end
+
+
+    //THE STATE MACHINE
     always @(posedge clk)
     begin
         state_next=state_reg;
@@ -160,69 +187,118 @@ module filled_tris (
             begin
                 if(Y_itr>=Y0 & Y_itr<=Y1 )
                 begin
-                    $display("line between %d-%d",X_02[Y_itr-Y0],X_01[Y_itr-Y0]);
-                    //$display("y0->y1 %d",Y_itr-Y0);
-                    Y_itr_next=Y_itr+1;
+                    //$display("line between %d,%d",X_02[Y_itr-Y0],X_01[Y_itr-Y0]);
+                    if(LR)
+                    begin
+                    lnX1=X_02[Y_itr-Y0];
+                    lnX2=X_01[Y_itr-Y0];    
+                    end
+                    else
+                    begin
+                    lnX2=X_02[Y_itr-Y0];
+                    lnX1=X_01[Y_itr-Y0];
+                    end
+                    lnY1=Y_itr;
+                    lnY2=Y_itr;
+                    Y_itr_next=Y_itr+1;   
+                    //ebar line draw kore asbe
+                    state_next=4'b1001;
+                    line_start=1'b1;
                 end
                 else if(Y_itr>Y1 & Y_itr<=Y2)
                 begin
-                    $display("line between %d-%d",X_02[Y_itr-Y0],X_12[Y_itr-Y1]);
-                    //$display("y1->y2 %d",Y_itr-Y1);
-                    Y_itr_next=Y_itr+1;
+                    //$display("line between %d,%d",X_02[Y_itr-Y0],X_12[Y_itr-Y1]);
+                    if(LR)
+                    begin
+                    lnX1=X_02[Y_itr-Y0];
+                    lnX2=X_12[Y_itr-Y1];    
+                    end
+                    else
+                    begin
+                    lnX2=X_02[Y_itr-Y0];
+                    lnX1=X_12[Y_itr-Y1]; 
+                    end
+                    lnY1=Y_itr;
+                    lnY2=Y_itr;
+                    Y_itr_next=Y_itr+1;    
+                    //ebar line draw kore asbe 
+                    state_next=4'b1001; 
+                    line_start=1'b1;       
                 end
                 else
                   finish_reg=1'b1;
             end
+            4'b1001://fill the triangles
+            begin
+                line_start=1'b0;//start doing line operation
+
+                if(line_finish)
+                begin
+                state_next=4'b1000;  
+                line_start=1'b1;  
+                end
+                
+            end
         endcase  
         end  
     end
-    assign OX=X0;
-    assign OY=Y0;
+
+    always @(*) begin
+        lx1<=(state_reg==4'b1001)?lnX1:0;
+        ly1<=(state_reg==4'b1001)?lnY1:0;
+        lx2<=(state_reg==4'b1001)?lnX2:0;
+        ly2<=(state_reg==4'b1001)?lnY2:0;
+    end
+    
+    assign OX1=(state_reg==4'b1001)?LX:0;
+    assign OY1=(state_reg==4'b1001)?LY:0;
     assign finish=finish_reg;
 endmodule
 
 
 //tb
-`timescale 1ns/1ps
-module tb (
-);
-    reg signed[31:0] x1,y1,x2,y2,x3,y3;
-    wire signed[31:0] OX,OY;
-    wire finish;
-    reg clk;
-    reg reset;
-
-    filled_tris uut(.x1(x1),
-                    .y1(y1),
-                    .x2(x2),
-                    .y2(y2),
-                    .x3(x3),
-                    .y3(y3),
-                    .OX(OX),
-                    .OY(OY),
-                    .clk(clk),
-                    .finish(finish),
-                    .reset(reset));
-    always
-    begin
-    clk=~clk;
-    #1;    
-    end
-    initial begin
-        clk=0;
-        reset=1;
-        x1=35;
-        y1=40;
-        x2=10;
-        y2=20;
-        x3=30;
-        y3=60;
-        #2;
-        reset=0;
-        #4000;
-        $finish;
-    end
-    initial begin
-        $monitor("%d,%d",OX,OY);
-    end
-endmodule
+// `timescale 1ns/1ps
+// module tb (
+// );
+//     reg signed[31:0] x1,y1,x2,y2,x3,y3;
+//     wire [9:0] OX1;
+//     wire [8:0] OY1;
+//     wire finish;
+//     reg clk;
+//     reg reset;
+//     reg pause_sig;
+//     filled_tris uut(.x1(x1),
+//                     .y1(y1),
+//                     .x2(x2),
+//                     .y2(y2),
+//                     .x3(x3),
+//                     .y3(y3),
+//                     .OX1(OX1),
+//                     .OY1(OY1),
+//                     .clk(clk),
+//                     .finish(finish),
+//                     .reset(reset));
+//     always
+//     begin
+//     clk=~clk;
+//     #1;    
+//     end
+//     initial begin
+//         clk=0;
+//         reset=1;
+//         x1=35;
+//         y1=40;
+//         x2=10;
+//         y2=20;
+//         x3=30;
+//         y3=60;
+//         #2;
+//         reset=0;
+//         #366;
+//         #30000;
+//         $finish;
+//     end
+//     initial begin
+//         $monitor("filled-%d,%d",OX1,OY1);//filled pixels
+//     end
+// endmodule

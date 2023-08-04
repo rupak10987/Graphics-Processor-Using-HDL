@@ -5,6 +5,7 @@ module B_Line(
     output wire [8:0]Y,
     output reg finish
 );
+
 // Line coordinates
 reg signed [31:0]X1,Y1,X2,Y2;
 always @(*) begin
@@ -13,16 +14,16 @@ always @(*) begin
   X2 <= x2;  
   Y2 <= y2;  
 end
-
+reg is_paused;
 reg signed[31:0]x,x_next,y,y_next,dx,dy,dt,ds,d,d_next;
 reg[2:0]state_reg,state_next;
-
 //mem_of_state
   always @(posedge clk)begin
-    if(start)
+    if(start )
     begin
         state_reg<=2'b00;
         state_next<=2'b00;
+        finish=1'b0;
     end
     else
     begin
@@ -35,7 +36,8 @@ reg[2:0]state_reg,state_next;
 
 //state_next logic
 always @(*) begin
-    finish=1'b0;
+    
+    //finish=1'b0;
     state_next=state_reg;
     x_next=x;
     y_next=y;
@@ -112,9 +114,10 @@ end
 
 assign X=x[9:0];
 assign Y=y[8:0];
+
 endmodule
 
-// ////testbench
+//testbench
 // `timescale 1ns/1ps
 // module brsn_line_tb ();
 // reg clk;
@@ -138,17 +141,17 @@ endmodule
 // always
 // begin
 //     clk=~clk;
-//     #20;
+//     #1;
 // end
 // initial
 // begin
 //     x1=10;
-//     y1=40;
-//     x2=30;
+//     y1=20;
+//     x2=20;
 //     y2=20;
 //     clk<=1'b0;
 //     start<=1'b1;
-//     #40;
+//     #2;
 //     start<=1'b0;
 //     #4000;
 //     $finish;

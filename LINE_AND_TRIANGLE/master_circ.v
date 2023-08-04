@@ -2,41 +2,57 @@
 `timescale 1ns/1ps
 module tb_r2r();
 reg clk;
-reg reset;
-reg start;
-wire finish;
+reg Rreset;
+reg Rstart;
+wire Rfinish;
 reg [7:0]ram_read_addr;
-wire [31:0]ram_read_data1,ram_read_data2,ram_read_data3,ram_read_data4;
+wire [31:0]ram_read_data1,ram_read_data2,ram_read_data3,ram_read_data4,ram_read_data5,ram_read_data6,ram_read_data7,ram_read_data8,ram_read_data9;
+
 
 
 ROM2RAM circ3(
     .clk(clk),
-    .reset(reset),
-    .start(start),
-    .finish(finish),
+    .reset(Rreset),
+    .start(Rstart),
+    .finish(Rfinish),
     .ram_read_addr(ram_read_addr),
     .ram_read_data1(ram_read_data1),
     .ram_read_data2(ram_read_data2),
     .ram_read_data3(ram_read_data3),
-    .ram_read_data4(ram_read_data4));
+    .ram_read_data4(ram_read_data4),
+    .ram_read_data5(ram_read_data5),
+    .ram_read_data6(ram_read_data6),
+    .ram_read_data7(ram_read_data7),
+    .ram_read_data8(ram_read_data8),
+    .ram_read_data9(ram_read_data9));
 
-reg line_start;
-wire line_finish;
-wire[9:0]X;
-wire[8:0]Y;
-reg[31:0] x1,x2,y1,y2;
-B_Line circ4(
-     .clk(clk),
-     .start(line_start),
-     .X(X),
-     .Y(Y),
-     .finish(line_finish),
-     .x1(x1),
-     .y1(y1),
-     .x2(x2),
-     .y2(y2)
-    ) ;
 
+reg signed[31:0] tx1,ty1,tx2,ty2,tx3,ty3;
+wire [9:0] OX1;
+wire [8:0] OY1;
+wire tfinish;
+reg treset;
+filled_tris uut(    .x1(tx1),
+                    .y1(ty1),
+                    .x2(tx2),
+                    .y2(ty2),
+                    .x3(tx3),
+                    .y3(ty3),
+                    .OX1(OX1),
+                    .OY1(OY1),
+                    .clk(clk),
+                    .finish(tfinish),
+                    .reset(treset)
+                    );
+//for triangle
+always @(*) begin
+    tx1=ram_read_data1;
+    ty1=ram_read_data2;
+    tx2=ram_read_data4;
+    ty2=ram_read_data5; 
+    tx3=ram_read_data7;
+    ty3=ram_read_data8; 
+end
 
 reg vid_buff_we;
 wire stat;
@@ -44,7 +60,7 @@ reg [18:0]_buff_add;
 always @(*) 
 begin
 if(vid_buff_we)
-    _buff_add={X[9:0],Y[8:0]};
+    _buff_add={OX1[9:0],OY1[8:0]};
 else
     _buff_add={p_x[9:0],p_y[8:0]}; 
 end
@@ -90,30 +106,24 @@ always begin
     #1;
 end
 
-always @(*) begin
-    x1<=ram_read_data1;
-    y1<=ram_read_data2;
-    x2<=ram_read_data3;
-    y2<=ram_read_data4;
-end
 
 initial begin
     monitor_rest=1;
     clk=0;
-    reset=1;
-    start=1;
+    Rreset=1;
+    Rstart=1;
     vid_buff_we=1'b0;
     #2;
-    reset=0;
-    start=0;
-    #14;//load done
-    ram_read_addr=8'b0000_0000;
+    Rreset=0;
+    Rstart=0;
+    #18;//load done
+    ram_read_addr=8'b0000_0000;//a whole triangle is feed
     #2;
     vid_buff_we=1'b1;
-    line_start=1'b1;
+    treset=1'b1;
     #2;
-    line_start=1'b0;
-    #40;
+    treset=1'b0;
+    #1000;//onek gula clk pulse dite hbe
     vid_buff_we=1'b0;
     monitor_rest=0;
     #200000000;
@@ -121,7 +131,8 @@ initial begin
 end
 
 initial begin
-//$monitor("x=%d | y=%d",X,Y);
-$monitor("stat=%b at x=%d | y=%d\n",stat,p_x,p_y);
+//$monitor("xL=%d | xR=%d at y=%d" ,OX1,OX2,OY1); //for triangle
+//$monitor("x=%d,y=%d",OX1,OY1);//for showing only the filled pixels
+$monitor("stat=%b at x=%d | y=%d\n",stat,p_x,p_y);//for showing all pixels and its corresponding bw value
 end
 endmodule
