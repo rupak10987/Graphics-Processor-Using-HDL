@@ -132,7 +132,7 @@ end
 
 initial begin
 //$monitor("xL=%d | xR=%d at y=%d" ,OX1,OX2,OY1); //for triangle
-//$monitor("x=%d,y=%d",OX1,OY1);//for showing only the filled pixels
-$monitor("stat=%b at x=%d | y=%d\n",stat,p_x,p_y);//for showing all pixels and its corresponding bw value
+$monitor("x=%d,y=%d",OX1,OY1);//for showing only the filled pixels
+//$monitor("stat=%b at x=%d | y=%d\n",stat,p_x,p_y);//for showing all pixels and its corresponding bw value
 end
 endmodule
