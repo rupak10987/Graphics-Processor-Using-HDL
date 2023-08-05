@@ -50,16 +50,16 @@ module filled_tris (
     always @(posedge clk) begin
         if(reset)
         begin
-            state_reg=0;
-            state_next=0;
-            finish_reg=0;
-            Y_itr=0;
-            Y_itr_next=0;
+            state_reg<=4'b0000;
+            state_next<=4'b0000;
+            finish_reg<=1'b0;
+            Y_itr<=0;
+            Y_itr_next<=0;
         end
         else
         begin
-        state_reg=state_next;  
-        Y_itr=Y_itr_next;
+        state_reg<=state_next;  
+        Y_itr<=Y_itr_next;
         end
         
     end
@@ -68,7 +68,6 @@ module filled_tris (
     //THE STATE MACHINE
     always @(posedge clk)
     begin
-        state_next=state_reg;
         if(~finish_reg & ~reset)
         begin
           case (state_reg)
@@ -130,7 +129,7 @@ module filled_tris (
                 temp=(Y_itr-Y0)*(X1-X0);
                 X_01[Y_itr-Y0]=X0+(temp/(Y1-Y0));//eqn
                 //$display("xo1[%d]=%d",Y_itr-Y0,X_01[Y_itr-Y0]);
-                Y_itr_next<=Y_itr+1;
+                Y_itr_next=Y_itr+1;
                end
                else
                begin
@@ -145,7 +144,7 @@ module filled_tris (
                 temp=(Y_itr-Y0)*(X2-X0);
                 X_02[Y_itr-Y0]=X0+(temp/(Y2-Y0));//eqn
                 //$display("xo2[%d]=%d",Y_itr-Y0,X_02[Y_itr-Y0]);
-                Y_itr_next<=Y_itr+1;
+                Y_itr_next=Y_itr+1;
                end
                else
                begin
@@ -160,7 +159,7 @@ module filled_tris (
                 temp=(Y_itr-Y1)*(X2-X1);
                 X_12[Y_itr-Y1]=X1+(temp/(Y2-Y1));//eqn
                 //$display("x12[%d]=%d",Y_itr-Y1,X_12[Y_itr-Y1]);
-                Y_itr_next<=Y_itr+1;
+                Y_itr_next=Y_itr+1;
                end
                else
                begin

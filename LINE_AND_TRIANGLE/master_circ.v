@@ -48,19 +48,19 @@ filled_tris uut(    .x1(tx1),
 reg signed [31:0]D=300;                    
 
 always @(*) begin
-    tx1=ram_read_data1;
-    ty1=ram_read_data2;
-    tx2=ram_read_data4;
-    ty2=ram_read_data5;
-    tx3=ram_read_data7;
-    ty3=ram_read_data8;
+    tx1<=ram_read_data1;
+    ty1<=ram_read_data2;
+    tx2<=ram_read_data4;
+    ty2<=ram_read_data5;
+    tx3<=ram_read_data7;
+    ty3<=ram_read_data8;
     // if projectrion
-    // tx1=(ram_read_data1*D)/ram_read_data3;
-    // ty1=(ram_read_data2*D)/ram_read_data3;
-    // tx2=(ram_read_data4*D)/ram_read_data6;
-    // ty2=(ram_read_data5*D)/ram_read_data6; 
-    // tx3=(ram_read_data7*D)/ram_read_data9;
-    // ty3=(ram_read_data8*D)/ram_read_data9; 
+    // tx1<=(ram_read_data1*D)/ram_read_data3;
+    // ty1<=(ram_read_data2*D)/ram_read_data3;
+    // tx2<=(ram_read_data4*D)/ram_read_data6;
+    // ty2<=(ram_read_data5*D)/ram_read_data6; 
+    // tx3<=(ram_read_data7*D)/ram_read_data9;
+    // ty3<=(ram_read_data8*D)/ram_read_data9; 
 end
 
 reg vid_buff_we;
@@ -124,7 +124,7 @@ end
 always @(posedge clk) begin
     if(tfinish & ram_read_addr<9)
     begin
-        $display("triangle done");
+        //$display("triangle done");
         treset=1'b1;
         tiny_state=2'b00;
     end
@@ -144,23 +144,23 @@ end
 
 
 initial begin
-    monitor_rest=1;
-    clk=0;
-    Rstart=1;
-    vid_buff_we=1'b0;
+    clk<=0;
+    monitor_rest<=1;
+    Rstart<=1;
+    vid_buff_we<=1'b0;
     #2;
-    Rstart=0;
+    Rstart<=0;
     #36;//load done
-    ram_read_addr=0;//1st triangle is feed
-    ram_read_addr_next=0;
+    ram_read_addr<=0;//1st triangle is feed
+    ram_read_addr_next<=0;
     #2;
-    vid_buff_we=1'b1;
-    treset=1'b1;
+    vid_buff_we<=1'b1;
+    treset<=1'b1;
     #2;
-    treset=1'b0;
+    treset<=1'b0;
     #4000;//onek gula clk pulse dite hbe
-    vid_buff_we=1'b0;//draw kora sesh so ekhon screen e render kora jabe
-    monitor_rest=0;
+    vid_buff_we<=1'b0;//draw kora sesh so ekhon screen e render kora jabe
+    monitor_rest<=0;
     #200000000;
     $finish;
 end

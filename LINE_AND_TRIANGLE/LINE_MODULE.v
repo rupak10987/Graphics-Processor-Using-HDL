@@ -20,18 +20,18 @@ reg signed[31:0]x,x_next,y,y_next,dx,dy,dt,ds,d,d_next;
 reg[2:0]state_reg,state_next;
 //mem_of_state
   always @(posedge clk)begin
-    if(start )
+    if(start==1'b1)
     begin
-        state_reg<=2'b00;
-        state_next<=2'b00;
-        L_finish_reg=1'b0;
+        state_reg<=3'b000;
+        state_next<=3'b000;
+        L_finish_reg<=1'b0;
     end
     else
     begin
-        state_reg=state_next;
-        x=x_next;
-        y=y_next;
-        d=d_next;
+        state_reg<=state_next;
+        x<=x_next;
+        y<=y_next;
+        d<=d_next;
     end
   end
 
