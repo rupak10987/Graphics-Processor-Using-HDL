@@ -7,27 +7,28 @@ module filled_tris (
     input wire clk
 );
     
-    reg signed[31:0] X0,X1,X2;
-    reg signed[31:0] Y0,Y1,Y2;
-    reg signed[31:0] temp;
+    reg signed[31:0] X0,X1,X2,X0_next,X1_next,X2_next;
+    reg signed[31:0] Y0,Y1,Y2,Y0_next,Y1_next,Y2_next;
+    reg signed[31:0] temp,temp_next;
     reg signed [31:0]Y_itr;
     reg signed [31:0]Y_itr_next;
-    reg [31:0] size;
+    reg [31:0] size,size_next;
     reg [3:0] state_reg;
     reg[3:0] state_next;
-    reg LR;
+    reg LR,LR_next;
     reg finish_reg;
     reg signed[31:0] X_left[640:0];//initialize to max size vertical height of display
     reg signed[31:0] X_right[640:0];
     reg signed[31:0] X_01[640:0];
     reg signed[31:0] X_12[640:0];
     reg signed[31:0] X_02[640:0];
-    reg signed[31:0]lnX1,lnY1,lnX2,lnY2;
+    reg signed[31:0]lnX1,lnY1,lnX2,lnY2,lnX1_next,lnY1_next,lnX2_next,lnY2_next;
 
 
     //for line
     reg line_start;
     wire line_finish;
+    reg r_line_finish;
     wire[9:0]LX;
     wire[8:0]LY;
     reg[31:0] lx1,lx2,ly1,ly2;
@@ -43,7 +44,9 @@ module filled_tris (
      .y2(ly2)
     );
 
-
+always @(*) begin
+    r_line_finish=line_finish;
+end
 
 
 
@@ -60,61 +63,85 @@ module filled_tris (
         begin
         state_reg<=state_next;  
         Y_itr<=Y_itr_next;
+        X0<=X0_next;
+        X1<=X1_next;
+        X2<=X2_next;
+        Y0<=Y0_next;
+        Y1<=Y1_next;
+        Y2<=Y2_next;
+        temp<=temp_next;
+        size<=size_next;
+        LR<=LR_next;
+        lnX1<=lnX1_next;
+        lnX2<=lnX2_next;
+        lnY1<=lnY1_next;
+        lnY2<=lnY2_next;
+        
         end
         
     end
 
 
     //THE STATE MACHINE
-    always @(posedge clk)
+    always @(*)
     begin
-        if(~finish_reg & ~reset)
-        begin
+        state_next=state_reg;
+        Y_itr_next=Y_itr;
+        finish_reg=1'b0;
+        X0_next=X0;
+        X1_next=X1;
+        X2_next=X2;
+        Y0_next=Y0;
+        Y1_next=Y1;
+        Y2_next=Y2;
+        size_next=size;
+        LR_next=LR;
+        temp_next=temp;
+        lnX1_next=lnX1;
+        lnX2_next=lnX2;
+        lnY1_next=lnY1;
+        lnY2_next=lnY2;
+        //if(~finish_reg & ~reset)
+       // begin
           case (state_reg)
             4'b0000: //initialize all reg
             begin
-            X0=x1;
-            Y0=y1;  
-            X1=x2;
-            Y1=y2;
-            X2=x3;
-            Y2=y3;
+            X0_next=x1;
+            Y0_next=y1;  
+            X1_next=x2;
+            Y1_next=y2;
+            X2_next=x3;
+            Y2_next=y3;
             state_next=4'b0001;
             end
             4'b0001://sort in order such that y2 top, y1 mid and y0 bottom vertecies
             begin
             if(Y1<Y0)
             begin
-                temp=Y0;
-                Y0=Y1;
-                Y1=temp;
-                temp=X0;
-                X0=X1;
-                X1=temp;
+                Y0_next=Y1;
+                Y1_next=Y0;
+                X0_next=X1;
+                X1_next=X0;
             end
             if(Y2<Y0)
             begin
-                temp=Y0;
-                Y0=Y2;
-                Y2=temp;
-                temp=X0;
-                X0=X2;
-                X2=temp;
+                Y0_next=Y2;
+                Y2_next=Y0;
+                X0_next=X2;
+                X2_next=X0;
             end
             if(Y2<Y1)
             begin
-                temp=Y1;
-                Y1=Y2;
-                Y2=temp;
-                temp=X1;
-                X1=X2;
-                X2=temp;
+                Y1_next=Y2;
+                Y2_next=Y1;
+                X1_next=X2;
+                X2_next=X1;
             end
             state_next=4'b0010;
             end
             4'b0010: //calculate size
             begin
-                size=Y2-Y0+1;
+                size_next=Y2-Y0+1;
                 state_next=4'b0011;
             end
             4'b0011: //set y_itr to Y0
@@ -127,9 +154,8 @@ module filled_tris (
                if(Y_itr<=Y1)
                begin
                 temp=(Y_itr-Y0)*(X1-X0);
-                X_01[Y_itr-Y0]=X0+(temp/(Y1-Y0));//eqn
-                //$display("xo1[%d]=%d",Y_itr-Y0,X_01[Y_itr-Y0]);
-                Y_itr_next=Y_itr+1;
+                X_01[Y_itr-Y0]=X0+(temp/(Y1-Y0));
+                Y_itr_next<=Y_itr+1;
                end
                else
                begin
@@ -141,10 +167,8 @@ module filled_tris (
             begin
                if(Y_itr<=Y2)
                begin
-                temp=(Y_itr-Y0)*(X2-X0);
-                X_02[Y_itr-Y0]=X0+(temp/(Y2-Y0));//eqn
-                //$display("xo2[%d]=%d",Y_itr-Y0,X_02[Y_itr-Y0]);
-                Y_itr_next=Y_itr+1;
+                X_02[Y_itr-Y0]=X0+(((Y_itr-Y0)*(X2-X0))/(Y2-Y0));
+                Y_itr_next<=Y_itr+1;
                end
                else
                begin
@@ -156,10 +180,8 @@ module filled_tris (
             begin
                if(Y_itr<=Y2)
                begin
-                temp=(Y_itr-Y1)*(X2-X1);
-                X_12[Y_itr-Y1]=X1+(temp/(Y2-Y1));//eqn
-                //$display("x12[%d]=%d",Y_itr-Y1,X_12[Y_itr-Y1]);
-                Y_itr_next=Y_itr+1;
+                X_12[Y_itr-Y1]=X1+(((Y_itr-Y1)*(X2-X1))/(Y2-Y1));
+                Y_itr_next<=Y_itr+1;
                end
                else
                begin
@@ -172,12 +194,12 @@ module filled_tris (
                 if(X_12[0]>X_02[size/2])
                 begin
                 //$display("X02 is left");
-                LR=1'b1;
+                LR_next=1'b1;
                 end
                 else
                 begin
                 //$display("X012 is left");
-                LR=1'b0;
+                LR_next=1'b0;
                 end
                 Y_itr_next=Y0;
                 state_next=4'b1000;  
@@ -189,16 +211,16 @@ module filled_tris (
                     //$display("line between %d,%d",X_02[Y_itr-Y0],X_01[Y_itr-Y0]);
                     if(LR)
                     begin
-                    lnX1=X_02[Y_itr-Y0];
-                    lnX2=X_01[Y_itr-Y0];    
+                    lnX1_next=X_02[Y_itr-Y0];
+                    lnX2_next=X_01[Y_itr-Y0];    
                     end
                     else
                     begin
-                    lnX2=X_02[Y_itr-Y0];
-                    lnX1=X_01[Y_itr-Y0];
+                    lnX2_next=X_02[Y_itr-Y0];
+                    lnX1_next=X_01[Y_itr-Y0];
                     end
-                    lnY1=Y_itr;
-                    lnY2=Y_itr;
+                    lnY1_next=Y_itr;
+                    lnY2_next=Y_itr;
                     Y_itr_next=Y_itr+1;   
                     //ebar line draw kore asbe
                     state_next=4'b1001;
@@ -209,16 +231,16 @@ module filled_tris (
                     //$display("line between %d,%d",X_02[Y_itr-Y0],X_12[Y_itr-Y1]);
                     if(LR)
                     begin
-                    lnX1=X_02[Y_itr-Y0];
-                    lnX2=X_12[Y_itr-Y1];    
+                    lnX1_next=X_02[Y_itr-Y0];
+                    lnX2_next=X_12[Y_itr-Y1];    
                     end
                     else
                     begin
-                    lnX2=X_02[Y_itr-Y0];
-                    lnX1=X_12[Y_itr-Y1]; 
+                    lnX2_next=X_02[Y_itr-Y0];
+                    lnX1_next=X_12[Y_itr-Y1]; 
                     end
-                    lnY1=Y_itr;
-                    lnY2=Y_itr;
+                    lnY1_next=Y_itr;
+                    lnY2_next=Y_itr;
                     Y_itr_next=Y_itr+1;    
                     //ebar line draw kore asbe 
                     state_next=4'b1001; 
@@ -231,7 +253,7 @@ module filled_tris (
             begin
                 line_start=1'b0;//start doing line operation
 
-                if(line_finish)
+                if(r_line_finish)
                 begin
                 state_next=4'b1000;  
                 line_start=1'b1;  
@@ -240,13 +262,13 @@ module filled_tris (
             end
         endcase  
         end  
-    end
+    //end
 
     always @(*) begin
-        lx1<=(state_reg==4'b1001)?lnX1:0;
-        ly1<=(state_reg==4'b1001)?lnY1:0;
-        lx2<=(state_reg==4'b1001)?lnX2:0;
-        ly2<=(state_reg==4'b1001)?lnY2:0;
+        lx1=(state_reg==4'b1001)?lnX1:0;
+        ly1=(state_reg==4'b1001)?lnY1:0;
+        lx2=(state_reg==4'b1001)?lnX2:0;
+        ly2=(state_reg==4'b1001)?lnY2:0;
     end
     
     assign OX1=(state_reg==4'b1001)?LX:0;

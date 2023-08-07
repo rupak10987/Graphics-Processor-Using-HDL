@@ -16,15 +16,14 @@ always @(*) begin
 end
 reg L_finish_reg;
 reg is_paused;
-reg signed[31:0]x,x_next,y,y_next,dx,dy,dt,ds,d,d_next;
+reg signed[31:0]x,x_next,y,y_next,dx,dy,dt,ds,dx_next,dy_next,dt_next,ds_next,d,d_next;
 reg[2:0]state_reg,state_next;
 //mem_of_state
   always @(posedge clk)begin
-    if(start==1'b1)
+    if(start )
     begin
-        state_reg<=3'b000;
-        state_next<=3'b000;
-        L_finish_reg<=1'b0;
+        state_reg<=2'b00;
+        state_next<=2'b00;  
     end
     else
     begin
@@ -32,39 +31,47 @@ reg[2:0]state_reg,state_next;
         x<=x_next;
         y<=y_next;
         d<=d_next;
+        ds<=ds_next;
+        dt<=dt_next;
+        dx<=dx_next;
+        dy<=dy_next;
     end
   end
 
 //state_next logic
 always @(*) begin
-    
-    //finish=1'b0;
+    //defaults
+    L_finish_reg=1'b0;
     state_next=state_reg;
     x_next=x;
     y_next=y;
     d_next=d;
+    ds_next=ds;
+    dt_next=dt;
+    dx_next=dx;
+    dy_next=dy;
     case (state_reg)
         3'b000:
         begin
             x_next=X1;
             y_next=Y1;
-            dx=X2-X1;
-            dy=Y2-Y1;
+            dx_next=X2-X1;
+            dy_next=Y2-Y1;
             state_next=3'b001;
         end 
         3'b001:
         begin
             if(dx>=dy)
             begin
-            dt=2*(dy-dx);
-            ds=2*dy;
+            dt_next=2*(dy-dx);
+            ds_next=2*dy;
             d_next=(2*dy)-dx;
             state_next=3'b010;
             end
             else
             begin
-            dt=2*(dx-dy);
-            ds=2*dx;
+            dt_next=2*(dx-dy);
+            ds_next=2*dx;
             d_next=(2*dx)-dy;
             state_next=3'b011;
             end
