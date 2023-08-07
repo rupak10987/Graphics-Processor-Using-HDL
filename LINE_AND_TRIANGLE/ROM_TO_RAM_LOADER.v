@@ -91,7 +91,7 @@ case (state_reg)
     end
     vul:
     begin
-        
+    state_next=suru; 
     end  
 endcase
 end

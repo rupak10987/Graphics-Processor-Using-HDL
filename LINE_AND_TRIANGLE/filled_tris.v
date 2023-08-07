@@ -9,7 +9,6 @@ module filled_tris (
     
     reg signed[31:0] X0,X1,X2,X0_next,X1_next,X2_next;
     reg signed[31:0] Y0,Y1,Y2,Y0_next,Y1_next,Y2_next;
-    reg signed[31:0] temp,temp_next;
     reg signed [31:0]Y_itr;
     reg signed [31:0]Y_itr_next;
     reg [31:0] size,size_next;
@@ -26,7 +25,7 @@ module filled_tris (
 
 
     //for line
-    reg line_start;
+    reg line_start,line_start_next;
     wire line_finish;
     reg r_line_finish;
     wire[9:0]LX;
@@ -53,14 +52,13 @@ end
     always @(posedge clk) begin
         if(reset)
         begin
+            line_start=1'b0;
             state_reg<=4'b0000;
-            state_next<=4'b0000;
-            finish_reg<=1'b0;
             Y_itr<=0;
-            Y_itr_next<=0;
         end
         else
         begin
+        line_start<=line_start_next;
         state_reg<=state_next;  
         Y_itr<=Y_itr_next;
         X0<=X0_next;
@@ -69,7 +67,6 @@ end
         Y0<=Y0_next;
         Y1<=Y1_next;
         Y2<=Y2_next;
-        temp<=temp_next;
         size<=size_next;
         LR<=LR_next;
         lnX1<=lnX1_next;
@@ -85,6 +82,7 @@ end
     //THE STATE MACHINE
     always @(*)
     begin
+        line_start_next=line_start;
         state_next=state_reg;
         Y_itr_next=Y_itr;
         finish_reg=1'b0;
@@ -96,7 +94,6 @@ end
         Y2_next=Y2;
         size_next=size;
         LR_next=LR;
-        temp_next=temp;
         lnX1_next=lnX1;
         lnX2_next=lnX2;
         lnY1_next=lnY1;
@@ -151,11 +148,11 @@ end
             end
             4'b0100: //calculate x01
             begin
-               if(Y_itr<=Y1)
+                X_01[Y_itr-Y0]=0;
+               if(Y_itr<=Y1 & Y_itr>=Y0)
                begin
-                temp=(Y_itr-Y0)*(X1-X0);
-                X_01[Y_itr-Y0]=X0+(temp/(Y1-Y0));
-                Y_itr_next<=Y_itr+1;
+                X_01[Y_itr-Y0]=X0+(((Y_itr-Y0)*(X1-X0))/(Y1-Y0));
+                Y_itr_next=Y_itr+1;
                end
                else
                begin
@@ -165,10 +162,11 @@ end
             end
             4'b0101: //calculate x02
             begin
-               if(Y_itr<=Y2)
+                X_02[Y_itr-Y0]=0;
+               if(Y_itr<=Y2 & Y_itr>=Y0)
                begin
                 X_02[Y_itr-Y0]=X0+(((Y_itr-Y0)*(X2-X0))/(Y2-Y0));
-                Y_itr_next<=Y_itr+1;
+                Y_itr_next=Y_itr+1;
                end
                else
                begin
@@ -178,10 +176,11 @@ end
             end
              4'b0110: //calculate x12
             begin
-               if(Y_itr<=Y2)
+               X_12[Y_itr-Y1]=0;
+               if(Y_itr<=Y2 & Y_itr>=Y1)
                begin
                 X_12[Y_itr-Y1]=X1+(((Y_itr-Y1)*(X2-X1))/(Y2-Y1));
-                Y_itr_next<=Y_itr+1;
+                Y_itr_next=Y_itr+1;
                end
                else
                begin
@@ -224,7 +223,7 @@ end
                     Y_itr_next=Y_itr+1;   
                     //ebar line draw kore asbe
                     state_next=4'b1001;
-                    line_start=1'b1;
+                    line_start_next=1'b1;
                 end
                 else if(Y_itr>Y1 & Y_itr<=Y2)
                 begin
@@ -244,22 +243,24 @@ end
                     Y_itr_next=Y_itr+1;    
                     //ebar line draw kore asbe 
                     state_next=4'b1001; 
-                    line_start=1'b1;       
+                    line_start_next=1'b1;       
                 end
                 else
                   finish_reg=1'b1;
             end
             4'b1001://fill the triangles
             begin
-                line_start=1'b0;//start doing line operation
+                line_start_next=1'b0;//start doing line operation
 
                 if(r_line_finish)
                 begin
                 state_next=4'b1000;  
-                line_start=1'b1;  
+                line_start_next=1'b1;  
                 end
                 
             end
+            default:
+            state_next=4'b0000;
         endcase  
         end  
     //end

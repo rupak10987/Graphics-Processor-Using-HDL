@@ -13,7 +13,6 @@ always @(posedge clk) begin
     begin
     buffer[wr_addr]=wr_data;
     end
-
 end
 assign read_data1=(buffer[read_addr]==1'b1)?1:0;
 endmodule

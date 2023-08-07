@@ -17,7 +17,8 @@ MASTER uut(.clk(mclk),
            .h_sync(h_sync),
            .v_sync(v_sync),
            .OX(OX),
-           .OY(OY));
+           .OY(OY)
+           );
            
 always
 begin
@@ -37,6 +38,7 @@ Mstart=1;
 $finish;
 end
 initial begin
-    $monitor("X=%d, Y=%d",OX,OY);//filled x and y
+    //$monitor("X=%d, Y=%d",OX,OY);//filled x and y
+     $monitor("RGB=%b%b%b|X=%d, Y=%d",RGBA[0],RGBA[4],RGBA[8],OX,OY);//filled x and y
 end
 endmodule

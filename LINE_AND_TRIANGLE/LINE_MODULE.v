@@ -22,8 +22,7 @@ reg[2:0]state_reg,state_next;
   always @(posedge clk)begin
     if(start )
     begin
-        state_reg<=2'b00;
-        state_next<=2'b00;  
+        state_reg<=2'b00; 
     end
     else
     begin
@@ -116,7 +115,8 @@ always @(*) begin
         begin
             L_finish_reg=1'b1;
         end
-        
+        default:
+            state_next=3'b000;
     endcase
 end
 assign finish=L_finish_reg;
