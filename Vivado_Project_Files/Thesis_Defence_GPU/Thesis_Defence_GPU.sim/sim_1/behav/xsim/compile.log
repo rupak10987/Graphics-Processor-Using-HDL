@@ -1,0 +1,20 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/LINE_MODULE.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module B_Line
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/RAM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module RAM
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/ROM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ROM
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/ROM_TO_RAM_LOADER.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ROM2RAM
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/Vga_Sync.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Vga_Sync
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/filled_tris.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module filled_tris
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/master_circ.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MASTER
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/video_buffer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module video_buffer
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/MASTER_TB.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MASTER_TB
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/USER/Desktop/Code_Submit/Vivado_Project_Files/Thesis_Defence_GPU/Thesis_Defence_GPU.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl

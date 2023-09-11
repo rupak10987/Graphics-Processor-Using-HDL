@@ -1,0 +1,17 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../../Verilog_Codes/LINE_MODULE.v" \
+"../../../../../../Verilog_Codes/RAM.v" \
+"../../../../../../Verilog_Codes/ROM.v" \
+"../../../../../../Verilog_Codes/ROM_TO_RAM_LOADER.v" \
+"../../../../../../Verilog_Codes/Vga_Sync.v" \
+"../../../../../../Verilog_Codes/filled_tris.v" \
+"../../../../../../Verilog_Codes/master_circ.v" \
+"../../../../../../Verilog_Codes/video_buffer.v" \
+"../../../../../../Verilog_Codes/MASTER_TB.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

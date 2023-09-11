@@ -1,0 +1,14 @@
+0.7
+2020.2
+May  7 2023
+15:24:31
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/LINE_MODULE.v,1691436167,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/RAM.v,,B_Line,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/MASTER_TB.v,1692932677,verilog,,,,MASTER_TB,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/RAM.v,1691129922,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/ROM.v,,RAM,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/ROM.v,1691129613,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/ROM_TO_RAM_LOADER.v,,ROM,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/ROM_TO_RAM_LOADER.v,1691436759,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/Vga_Sync.v,,ROM2RAM,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/Vga_Sync.v,1691808105,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/filled_tris.v,,Vga_Sync,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/filled_tris.v,1692342665,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/master_circ.v,,filled_tris,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/master_circ.v,1692342688,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/video_buffer.v,,MASTER,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/video_buffer.v,1691729351,verilog,,C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/MASTER_TB.v,,video_buffer,,,,,,,,
+C:/Users/USER/Desktop/Code_Submit/Vivado_Project_Files/Thesis_Defence_GPU/Thesis_Defence_GPU.sim/sim_1/behav/xsim/glbl.v,1683266558,verilog,,,,glbl,,,,,,,,

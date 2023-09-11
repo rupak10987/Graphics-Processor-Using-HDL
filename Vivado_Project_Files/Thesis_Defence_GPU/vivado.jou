@@ -1,0 +1,23 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Fri Aug 25 09:01:16 2023
+# Process ID: 22372
+# Current directory: C:/Users/USER/Desktop/Code_Submit/Vivado_Project_Files/Thesis_Defence_GPU
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent26448 C:\Users\USER\Desktop\Code_Submit\Vivado_Project_Files\Thesis_Defence_GPU\Thesis_Defence_GPU.xpr
+# Log file: C:/Users/USER/Desktop/Code_Submit/Vivado_Project_Files/Thesis_Defence_GPU/vivado.log
+# Journal file: C:/Users/USER/Desktop/Code_Submit/Vivado_Project_Files/Thesis_Defence_GPU\vivado.jou
+# Running On: DESKTOP-DPD4B8U, OS: Windows, CPU Frequency: 3600 MHz, CPU Physical cores: 8, Host memory: 17086 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/USER/Desktop/Code_Submit/Vivado_Project_Files/Thesis_Defence_GPU/Thesis_Defence_GPU.xpr
+update_compile_order -fileset sources_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+add_files -fileset sim_1 -norecurse C:/Users/USER/Desktop/Code_Submit/Verilog_Codes/MASTER_TB.v
+update_compile_order -fileset sim_1
+update_compile_order -fileset sim_1
+launch_simulation
+source MASTER_TB.tcl
+close_sim
